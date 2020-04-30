@@ -3,8 +3,13 @@ package graph.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
 
 import graph.IGraph;
 import graph.INode;
@@ -78,8 +83,23 @@ public class Graph implements IGraph
      */
     public void breadthFirstSearch(String startNodeName, NodeVisitor v)
     {
-        // TODO: Implement this method
-        throw new UnsupportedOperationException("Implement this method");
+        Set<Node> visited = new HashSet<Node>();
+    	Queue<Node> q = new LinkedList<Node>();
+        q.add((Node)this.getOrCreateNode(startNodeName));
+        v.visit((Node)this.getOrCreateNode(startNodeName));
+        visited.add((Node)this.getOrCreateNode(startNodeName));
+        while(!q.isEmpty()) {
+        	Node curr = q.remove();
+        	
+        	for(INode neighbor: curr.getNeighbors()) {
+        		if(! visited.contains(neighbor)) {
+        			q.add((Node)neighbor);
+        			v.visit(neighbor);
+                	visited.add((Node)neighbor);
+        		}
+        	}
+        	
+        }
     }
 
     /**
@@ -93,10 +113,21 @@ public class Graph implements IGraph
      */
     public void depthFirstSearch(String startNodeName, NodeVisitor v)
     {
-        // TODO: implement this method
-        throw new UnsupportedOperationException("Implement this method");
+    	Set<Node> visited = new HashSet<Node>();
+        Stack<Node> s = new Stack<Node>();
+        s.push((Node)this.getOrCreateNode(startNodeName));
+        while(! s.isEmpty()) {
+        	Node curr = s.pop();
+        	if(!visited.contains(curr)) {
+        		v.visit(curr);
+        		visited.add(curr);
+        		for(INode neighbors: curr.getNeighbors()) {
+        			s.push((Node)neighbors);
+        		}		
+        	}
+        }
+        	
     }
-
     /**
      * Perform Dijkstra's algorithm for computing the cost of the shortest path
      * to every node in the graph starting at the node with the given name.
@@ -111,8 +142,39 @@ public class Graph implements IGraph
      * @return
      */
     public Map<INode,Integer> dijkstra(String startName) {
-        // TODO: Implement this method
-        throw new UnsupportedOperationException("Implement this method");
+        Set<Node> q= new HashSet<Node>();
+        Map<INode, Integer> distance = new HashMap<INode, Integer>();
+        Map<Node, Node> prev = new HashMap<Node, Node>();
+        
+        for(INode node: this.getAllNodes()) {
+        	distance.put((Node)node, Integer.MAX_VALUE);
+        	prev.put((Node)node, null);
+        	q.add((Node)node);
+        }
+        distance.replace((Node)this.getOrCreateNode(startName), 0);
+        while(! q.isEmpty()) {
+        	INode min = null;
+        	int m = Integer.MAX_VALUE;
+        	for(Map.Entry<INode, Integer> entry: distance.entrySet()) {
+        		INode temp = entry.getKey();
+        		int t = entry.getValue();
+        		if(t < m) {
+        			m = t;
+        			min = temp;
+        		}
+        	}
+        	INode curr = min;
+        	q.remove(min);
+        	for(INode neighbor: curr.getNeighbors()) {
+        		int temp = distance.get(curr)+curr.getWeight(neighbor);
+        		if(temp < distance.get(neighbor)) {
+        			distance.replace((Node)neighbor, temp);
+        			prev.put((Node)neighbor, (Node)curr);
+        		}
+        	}
+        	
+        }
+        return distance;
     }
     
     /**
