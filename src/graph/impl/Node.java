@@ -1,6 +1,9 @@
 package graph.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 import graph.INode;
 
@@ -22,7 +25,8 @@ import graph.INode;
  */
 public class Node implements INode
 {
-    
+    String name;
+    HashMap<Node, Integer> edges;
     /**
      * Create a new node with the given name. The newly created node should
      * have no edges.
@@ -30,7 +34,8 @@ public class Node implements INode
      * @param name
      */
     public Node(String name) {
-        throw new UnsupportedOperationException("Implement this method");
+    	this.name = name;
+        this.edges = new HashMap<Node, Integer>();
     }
     
     
@@ -41,7 +46,7 @@ public class Node implements INode
      * @return
      */
     public String getName() {
-        throw new UnsupportedOperationException("Implement this method");
+        return this.name;
     }
 
     /**
@@ -50,7 +55,8 @@ public class Node implements INode
      * @return
      */
     public Collection<INode> getNeighbors() {
-        throw new UnsupportedOperationException("Implement this method");
+    	List<INode> temp = new ArrayList<INode>(this.edges.keySet());
+    	return temp;
     }
     
     /**
@@ -60,7 +66,7 @@ public class Node implements INode
      * @param weight
      */
     public void addDirectedEdgeToNode(INode n, int weight) {
-        throw new UnsupportedOperationException("Implement this method");
+       this.edges.put((Node) n, weight);
     }
     
     /**
@@ -71,7 +77,8 @@ public class Node implements INode
      * @param weight
      */
     public void addUndirectedEdgeToNode(INode n, int weight) {
-        throw new UnsupportedOperationException("Implement this method");
+        this.edges.put((Node) n, weight);
+        n.addDirectedEdgeToNode(this, weight);
     }
 
     /**
@@ -84,8 +91,13 @@ public class Node implements INode
      * @throws IllegalStateException
      */
     public void removeDirectedEdgeToNode(INode n) {
-        throw new UnsupportedOperationException("Implement this method");
-    }
+    	if(this.edges.containsKey(n)) {
+    		this.edges.remove(n);
+    	}
+    	else {
+        throw new IllegalStateException();
+    	}
+    } 	
     
     /**
      * Remove an undirected edge to the given node. This means removing
@@ -98,7 +110,13 @@ public class Node implements INode
      * @throws IllegalStateException
      */
     public void removeUndirectedEdgeToNode(INode n) {
-        throw new UnsupportedOperationException("Implement this method");
+    	if(this.edges.containsKey(n)) {
+    		this.edges.remove(n);
+    	}
+    	else {
+        throw new IllegalStateException();
+    	}
+    	n.removeDirectedEdgeToNode(this);
     }
     
     /**
@@ -109,7 +127,7 @@ public class Node implements INode
      * @return
      */
     public boolean hasEdge(INode other) {
-        throw new UnsupportedOperationException("Implement this method");
+        return this.edges.containsKey(other);
     }
     
     /**
@@ -122,6 +140,11 @@ public class Node implements INode
      * @throws IllegalStateException
      */
     public int getWeight(INode n) {
-        throw new UnsupportedOperationException("Implement this method");
+    	if(this.edges.containsKey(n)) {
+    		return this.edges.get(n);
+    	}
+    	else {
+        throw new IllegalStateException();
+    }
     }
 }

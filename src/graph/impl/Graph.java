@@ -1,6 +1,9 @@
 package graph.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import graph.IGraph;
@@ -16,7 +19,11 @@ import graph.NodeVisitor;
  */
 public class Graph implements IGraph
 {
+    HashMap<String, Node> nodes;
     
+    public Graph() {
+    	this.nodes = new HashMap<String,Node>();
+    }
     /**
      * Return the {@link Node} with the given name.
      * 
@@ -29,7 +36,14 @@ public class Graph implements IGraph
      * @return
      */
     public INode getOrCreateNode(String name) {
-        throw new UnsupportedOperationException("Implement this method");
+    	if(this.nodes.containsKey(name)) {
+    		return this.nodes.get(name);
+    	}
+    	else {
+    		INode temp = new Node(name);
+    		this.nodes.put(name, (Node)temp);
+    		return this.nodes.get(name);
+    	}
     }
 
     /**
@@ -40,7 +54,7 @@ public class Graph implements IGraph
      * @return
      */
     public boolean containsNode(String name) {
-        throw new UnsupportedOperationException("Implement this method");
+        return this.nodes.containsKey(name);
     }
 
     /**
@@ -49,7 +63,8 @@ public class Graph implements IGraph
      * @return
      */
     public Collection<INode> getAllNodes() {
-        throw new UnsupportedOperationException("Implement this method");
+    	List<INode> temp = new ArrayList<INode>(this.nodes.values());
+    	return temp;
     }
     
     /**
@@ -110,6 +125,6 @@ public class Graph implements IGraph
      */
     public IGraph primJarnik() {
         //TODO Implement this method
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Implement this method");
     }
 }
