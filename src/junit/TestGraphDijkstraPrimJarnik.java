@@ -64,6 +64,7 @@ graph dijkstra1 {
         assertEquals(11, (int)shortPaths.get(g.getOrCreateNode("F")));
         assertEquals(11, (int)shortPaths.get(g.getOrCreateNode("G")));
     }
+}
     
     /**
      * Prim-Jarnik cares about edge weights, so use the
@@ -75,7 +76,7 @@ graph dijkstra1 {
      * test cases have only one correct solution.
      * 
      */
-    @Test
+    /*@Test
     public void testPrimJarnik1() throws Exception
     {
         IGraph graph = GraphFactories.createUndirectedWeightedGraphFromEdgeList(new FileInputStream("tests/dijkstra1.txt"));
@@ -100,4 +101,6 @@ graph dijkstra1 {
         assertEquals(2, a.getWeight(d));
         assertFalse(d.hasEdge(e));
     }
+
 }
+*/
