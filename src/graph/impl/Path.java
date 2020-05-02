@@ -16,21 +16,15 @@ import graph.NodeVisitor;
 import java.util.Comparator; 
 import java.util.PriorityQueue;
 
-public class Edge implements Comparable {
-	INode origin;
-	INode result;
-	int weight;
+public class Path implements Comparable {
+	String name;
+	int cost;
 	
-	public Edge(INode origin, INode result, int weight) {
-		this.origin = origin;
-		this.result = result;
-		this.weight = weight;
+	public Path(String name, int cost) {
+		this.name = name;
+		this.cost = cost;
 	}
-	
 	public int compareTo(Object other) {
-		return this.weight - ((Edge)other).weight;
-		
+		return this.cost - ((Path)other).cost;
 	}
-
-
 }

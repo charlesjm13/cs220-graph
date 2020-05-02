@@ -147,39 +147,38 @@ public class Graph implements IGraph
 	 * @return
 	 */
 	public Map<INode,Integer> dijkstra(String startName) {
-	/*
-		Set<Node> q= new HashSet<Node>();
+	
+		PriorityQueue<Path> q = new PriorityQueue<Path>();
 		HashMap<INode, Integer> distanceFS = new HashMap<INode, Integer>();
-		distanceFS.put((Node)this.getOrCreateNode(startName), 0);
-		for(INode node: this.getAllNodes()) {
-			if(node.getName() != startName) {
-				distanceFS.put((Node)node, Integer.MAX_VALUE);
-			}
-			q.add((Node)node);
-		}
+		
+		//distanceFS.put((Node)this.getOrCreateNode(startName), 0);
+			
+		q.add(new Path(nodes.get(startName).getName(), 0));
+			
 		
 		while(!q.isEmpty()) {
-			Node curr = null;
-			int m = Integer.MAX_VALUE;
-			for(Entry<INode, Integer> entry: distanceFS.entrySet()) {
-				if(curr == null || m > entry.getValue()) {
-					curr = (Node)entry.getKey();
-				}
+			Path next =q.poll();
+			//Node curr = null;
+			int m = next.cost;
+			if(distanceFS.containsKey(nodes.get(next.name))) {
+				continue;
 			}
-			q.remove(curr);
-			for(Entry<Node, Integer> neighbor: curr.edges.entrySet()) {
-				int alt = distanceFS.get(curr)+ neighbor.getValue();;
-				if(alt < distanceFS.get(neighbor.getKey())){
-					distanceFS.replace(neighbor.getKey(), alt);
+			distanceFS.put(nodes.get(next.name), m);
+			
+			for(INode neighbor: nodes.get(next.name).getNeighbors()) {
+				if(distanceFS.containsKey(neighbor)) {
+					continue;
 				}
+				int alt = m + nodes.get(next.name).getWeight(neighbor);
+				q.add(new Path(neighbor.getName(), alt));
 				
 			}
+				
 		}
+		
 		return distanceFS;
 	}
-	*///TODO Implement this method
-        throw new UnsupportedOperationException();
-	}
+	
 
 	/**
 	 * Perform Prim-Jarnik's algorithm to compute a Minimum Spanning Tree (MST).
@@ -191,54 +190,32 @@ public class Graph implements IGraph
 	 */
 	
 	public IGraph primJarnik() {
-/*
+		PriorityQueue<Edge> q = new PriorityQueue<Edge>();
 		IGraph newGraph = new Graph();
-		Set<Node> visited = new HashSet<Node>();
-		PriorityQueue<Node> unvisited = new PriorityQueue<Node>();
-
+		INode first = nodes.values().iterator().next();
+		List<Edge> graphedges = new ArrayList<Edge>();
 		
-		Node first = (Node)this.getAllNodes().toArray()[0];
-
-		while(!unvisited.isEmpty()) {
-			visited.add(first);
-			unvisited.remove(first);
-
-			Node temp = null;
-			int m = Integer.MAX_VALUE;
-			
-			for(Map.Entry<Node, Integer> entry: first.edges.entrySet()) {
-				Node tt = entry.getKey();
-				int t = entry.getValue();
-				if(t < m && !visited.contains(tt)) {
-					temp = tt;
-					m = t;
-				}
-
-			}
-			if(temp != null) {
-			Node gnode = (Node)newGraph.getOrCreateNode(first.name);
-			//System.out.println(gnode.name);
-			//System.out.println(first.name);
-			//System.out.println(temp.name);
-			//System.out.println(m);
-			gnode.addUndirectedEdgeToNode(temp, m);
-			first = temp;
-			}
-			else {
-				first = (Node)unvisited.toArray()[0];
-			}
-			
-
-
-			
+		for(INode neighbor: first.getNeighbors()) {
+			q.add(new Edge(first, neighbor, first.getWeight(neighbor)));
 		}
-
+		while(!q.isEmpty()) {	
+			Edge next = q.poll();
+			if(newGraph.containsNode(next.result.getName())){
+				continue;
+			}
+			INode org = newGraph.getOrCreateNode(next.origin.getName());
+			INode res = newGraph.getOrCreateNode(next.result.getName());
+			org.addUndirectedEdgeToNode(res, next.weight);
+			//System.out.println("Edge from " + next.origin.getName() + "to " + next.result.getName() + "weight " + next.weight);
+			
+			for(INode neighbor: nodes.get(next.result.getName()).getNeighbors()) {
+				if(newGraph.containsNode(neighbor.getName())){
+					continue;
+				}
+				q.add(new Edge(next.result, neighbor, next.result.getWeight(neighbor)));
+			}
+		
+		}		
 		return newGraph;
-
-*/
-		 //TODO Implement this method
-        throw new UnsupportedOperationException();
 	}
-	
-
 }

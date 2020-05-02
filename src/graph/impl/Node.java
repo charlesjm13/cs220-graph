@@ -26,7 +26,7 @@ import graph.INode;
 public class Node implements INode
 {
     String name;
-    HashMap<Node, Integer> edges;
+    HashMap<INode, Integer> edges;
     /**
      * Create a new node with the given name. The newly created node should
      * have no edges.
@@ -35,7 +35,7 @@ public class Node implements INode
      */
     public Node(String name) {
     	this.name = name;
-        this.edges = new HashMap<Node, Integer>();
+        this.edges = new HashMap<INode, Integer>();
     }
     
     
